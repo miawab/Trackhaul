@@ -220,9 +220,9 @@ export const useStore = create((set, get) => ({
 
     set({ sharingSection: sectionId })
     try {
-      const res = await fetch(`https://is.gd/create.php?format=json&url=${encodeURIComponent(longUrl)}`)
+      const res = await fetch(`/api/shorten?url=${encodeURIComponent(longUrl)}`)
       const data = await res.json()
-      const shortUrl = data.shorturl || longUrl
+      const shortUrl = data.shortUrl || longUrl
       navigator.clipboard.writeText(shortUrl).catch(() => {})
       set({ sharingSection: null })
       return shortUrl
