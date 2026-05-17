@@ -154,17 +154,13 @@ export default function Section({ section }) {
                     onMouseEnter={e => menuItemHover(e)} onMouseLeave={e => menuItemLeave(e, 'var(--c-text-3)')}>
                     <Share2 size={13} /> Share section
                   </button>
-                  {section.id !== 'section_unsorted' && (
-                    <>
-                      <div style={{ borderTop: '1px solid var(--c-border)', margin: '4px 0' }} />
-                      <button onClick={() => { deleteSection(section.id); setMenuOpen(false) }}
-                        className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-500 transition-colors"
-                        onMouseEnter={e => e.currentTarget.style.background = 'var(--c-border-input)'}
-                        onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                        <Trash2 size={13} /> Delete section
-                      </button>
-                    </>
-                  )}
+                  <div style={{ borderTop: '1px solid var(--c-border)', margin: '4px 0' }} />
+                  <button onClick={() => { deleteSection(section.id); setMenuOpen(false) }}
+                    className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-500 transition-colors"
+                    onMouseEnter={e => e.currentTarget.style.background = 'var(--c-border-input)'}
+                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                    <Trash2 size={13} /> Delete section
+                  </button>
                 </div>
               </>
             )}

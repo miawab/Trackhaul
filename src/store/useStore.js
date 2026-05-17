@@ -107,10 +107,12 @@ export const useStore = create((set, get) => ({
   },
 
   deleteSection(id) {
-    // Move products to unsorted
+    const remaining = get().sections.filter(sec => sec.id !== id)
+    if (remaining.length === 0) return // always keep at least one section
+    const fallbackId = remaining[0].id
     set(s => ({
-      sections: s.sections.filter(sec => sec.id !== id),
-      products: s.products.map(p => p.sectionId === id ? { ...p, sectionId: 'section_unsorted' } : p),
+      sections: remaining,
+      products: s.products.map(p => p.sectionId === id ? { ...p, sectionId: fallbackId } : p),
     }))
     get()._save()
   },
