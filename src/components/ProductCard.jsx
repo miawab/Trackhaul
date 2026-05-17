@@ -157,7 +157,6 @@ export default function ProductCard({ product }) {
           </button>
         </div>
 
-        {/* overflow menu for delete + open link */}
         <div className="relative">
           <button
             onClick={() => setMenuOpen(m => !m)}
@@ -171,17 +170,38 @@ export default function ProductCard({ product }) {
           {menuOpen && (
             <>
               <div className="fixed inset-0 z-10" onClick={() => setMenuOpen(false)} />
-              <div className="absolute right-0 bottom-7 z-20 rounded-xl shadow-xl py-1 min-w-[130px]"
+              <div className="absolute right-0 bottom-7 z-20 rounded-xl shadow-xl py-1 min-w-[150px]"
                 style={{ background: 'var(--c-popup)', border: '1px solid var(--c-border-input)' }}>
+                <button onClick={() => { openEditModal(product); setMenuOpen(false) }}
+                  className="w-full flex items-center gap-2 px-3 py-2 text-sm transition-colors" style={{ color: 'var(--c-text-3)' }}
+                  onMouseEnter={e => { e.currentTarget.style.color = 'var(--c-text)'; e.currentTarget.style.background = 'var(--c-border-input)' }}
+                  onMouseLeave={e => { e.currentTarget.style.color = 'var(--c-text-3)'; e.currentTarget.style.background = 'transparent' }}>
+                  <Edit2 size={13} /> Edit
+                </button>
+                <button onClick={() => { duplicateProduct(product.id); setMenuOpen(false) }}
+                  className="w-full flex items-center gap-2 px-3 py-2 text-sm transition-colors" style={{ color: 'var(--c-text-3)' }}
+                  onMouseEnter={e => { e.currentTarget.style.color = 'var(--c-text)'; e.currentTarget.style.background = 'var(--c-border-input)' }}
+                  onMouseLeave={e => { e.currentTarget.style.color = 'var(--c-text-3)'; e.currentTarget.style.background = 'transparent' }}>
+                  <Copy size={13} /> Duplicate
+                </button>
+                <button onClick={() => { toggleWishlist(product.id); setMenuOpen(false) }}
+                  className="w-full flex items-center gap-2 px-3 py-2 text-sm transition-colors" style={{ color: 'var(--c-text-3)' }}
+                  onMouseEnter={e => { e.currentTarget.style.color = 'var(--c-text)'; e.currentTarget.style.background = 'var(--c-border-input)' }}
+                  onMouseLeave={e => { e.currentTarget.style.color = 'var(--c-text-3)'; e.currentTarget.style.background = 'transparent' }}>
+                  <Star size={13} /> {isWishlist ? 'Mark active' : 'Add to wishlist'}
+                </button>
                 {product.productUrl && (
-                  <a href={product.productUrl} target="_blank" rel="noopener noreferrer" onClick={() => setMenuOpen(false)}
-                    className="flex items-center gap-2 px-3 py-2 text-sm transition-colors"
-                    style={{ color: 'var(--c-text-3)' }}
-                    onMouseEnter={e => { e.currentTarget.style.color = 'var(--c-text)'; e.currentTarget.style.background = 'var(--c-border-input)' }}
-                    onMouseLeave={e => { e.currentTarget.style.color = 'var(--c-text-3)'; e.currentTarget.style.background = 'transparent' }}>
-                    <ExternalLink size={13} /> Open link
-                  </a>
+                  <>
+                    <div style={{ borderTop: '1px solid var(--c-border)', margin: '4px 0' }} />
+                    <a href={product.productUrl} target="_blank" rel="noopener noreferrer" onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-2 px-3 py-2 text-sm transition-colors" style={{ color: 'var(--c-text-3)' }}
+                      onMouseEnter={e => { e.currentTarget.style.color = 'var(--c-text)'; e.currentTarget.style.background = 'var(--c-border-input)' }}
+                      onMouseLeave={e => { e.currentTarget.style.color = 'var(--c-text-3)'; e.currentTarget.style.background = 'transparent' }}>
+                      <ExternalLink size={13} /> Open link
+                    </a>
+                  </>
                 )}
+                <div style={{ borderTop: '1px solid var(--c-border)', margin: '4px 0' }} />
                 <button onClick={() => { deleteProduct(product.id); setMenuOpen(false) }}
                   className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-500 transition-colors"
                   onMouseEnter={e => e.currentTarget.style.background = 'var(--c-border-input)'}

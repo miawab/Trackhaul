@@ -118,56 +118,52 @@ export default function Section({ section }) {
               </span>
             )}
           </div>
-          <button
-            onClick={() => openAddModal(section.id)}
-            className="opacity-0 group-hover:opacity-100 p-1 rounded-lg transition-all"
-            style={{ color: 'var(--c-text-6)' }}
-            onMouseEnter={e => { e.currentTarget.style.color = 'var(--c-text)'; e.currentTarget.style.background = 'var(--c-border-input)' }}
-            onMouseLeave={e => { e.currentTarget.style.color = 'var(--c-text-6)'; e.currentTarget.style.background = 'transparent' }}
-          >
-            <Plus size={14} />
-          </button>
           <div className="relative">
             <button
               onClick={() => setMenuOpen(m => !m)}
-              className="opacity-0 group-hover:opacity-100 p-1 rounded-lg transition-all"
-              style={{ color: 'var(--c-text-6)' }}
-              onMouseEnter={e => { e.currentTarget.style.color = 'var(--c-text)'; e.currentTarget.style.background = 'var(--c-border-input)' }}
-              onMouseLeave={e => { e.currentTarget.style.color = 'var(--c-text-6)'; e.currentTarget.style.background = 'transparent' }}
+              className="p-1 rounded-lg transition-all"
+              style={{ color: 'var(--c-text-6)', opacity: 0.5 }}
+              onMouseEnter={e => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.color = 'var(--c-text)'; e.currentTarget.style.background = 'var(--c-border-input)' }}
+              onMouseLeave={e => { e.currentTarget.style.opacity = '0.5'; e.currentTarget.style.color = 'var(--c-text-6)'; e.currentTarget.style.background = 'transparent' }}
             >
               <MoreVertical size={14} />
             </button>
             {menuOpen && (
               <>
                 <div className="fixed inset-0 z-10" onClick={() => setMenuOpen(false)} />
-                <div className="absolute right-0 top-8 z-20 rounded-xl shadow-xl py-1 min-w-[140px]" style={{ background: 'var(--c-popup)', border: '1px solid var(--c-border-input)' }}>
-                  <button
-                    onClick={() => { setNameInput(section.name); setBudgetInput(section.monthlyBudgetCap || ''); setEditing(true); setMenuOpen(false) }}
-                    className="w-full flex items-center gap-2 px-3 py-2 text-sm transition-colors"
-                    style={{ color: 'var(--c-text-3)' }}
-                    onMouseEnter={e => menuItemHover(e)}
-                    onMouseLeave={e => menuItemLeave(e, 'var(--c-text-3)')}
-                  >
-                    <Edit2 size={13} /> Rename
+                <div className="absolute right-0 top-8 z-20 rounded-xl shadow-xl py-1 min-w-[160px]" style={{ background: 'var(--c-popup)', border: '1px solid var(--c-border-input)' }}>
+                  <button onClick={() => { openAddModal(section.id); setMenuOpen(false) }}
+                    className="w-full flex items-center gap-2 px-3 py-2 text-sm transition-colors" style={{ color: 'var(--c-text-3)' }}
+                    onMouseEnter={e => menuItemHover(e)} onMouseLeave={e => menuItemLeave(e, 'var(--c-text-3)')}>
+                    <Plus size={13} /> Add item
                   </button>
-                  <button
-                    onClick={handleShare}
-                    className="w-full flex items-center gap-2 px-3 py-2 text-sm transition-colors"
-                    style={{ color: 'var(--c-text-3)' }}
-                    onMouseEnter={e => menuItemHover(e)}
-                    onMouseLeave={e => menuItemLeave(e, 'var(--c-text-3)')}
-                  >
+                  <button onClick={() => { setNameInput(section.name); setBudgetInput(section.monthlyBudgetCap || ''); setEditing(true); setMenuOpen(false) }}
+                    className="w-full flex items-center gap-2 px-3 py-2 text-sm transition-colors" style={{ color: 'var(--c-text-3)' }}
+                    onMouseEnter={e => menuItemHover(e)} onMouseLeave={e => menuItemLeave(e, 'var(--c-text-3)')}>
+                    <Edit2 size={13} /> Rename / edit
+                  </button>
+                  <button onClick={() => { toggleSection(section.id); setMenuOpen(false) }}
+                    className="w-full flex items-center gap-2 px-3 py-2 text-sm transition-colors" style={{ color: 'var(--c-text-3)' }}
+                    onMouseEnter={e => menuItemHover(e)} onMouseLeave={e => menuItemLeave(e, 'var(--c-text-3)')}>
+                    {section.isCollapsed
+                      ? <><ChevronDown size={13} /> Expand</>
+                      : <><ChevronRight size={13} /> Collapse</>}
+                  </button>
+                  <button onClick={handleShare}
+                    className="w-full flex items-center gap-2 px-3 py-2 text-sm transition-colors" style={{ color: 'var(--c-text-3)' }}
+                    onMouseEnter={e => menuItemHover(e)} onMouseLeave={e => menuItemLeave(e, 'var(--c-text-3)')}>
                     <Share2 size={13} /> Share section
                   </button>
                   {section.id !== 'section_unsorted' && (
-                    <button
-                      onClick={() => { deleteSection(section.id); setMenuOpen(false) }}
-                      className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-500 transition-colors"
-                      onMouseEnter={e => { e.currentTarget.style.background = 'var(--c-border-input)' }}
-                      onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
-                    >
-                      <Trash2 size={13} /> Delete section
-                    </button>
+                    <>
+                      <div style={{ borderTop: '1px solid var(--c-border)', margin: '4px 0' }} />
+                      <button onClick={() => { deleteSection(section.id); setMenuOpen(false) }}
+                        className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-500 transition-colors"
+                        onMouseEnter={e => e.currentTarget.style.background = 'var(--c-border-input)'}
+                        onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                        <Trash2 size={13} /> Delete section
+                      </button>
+                    </>
                   )}
                 </div>
               </>
