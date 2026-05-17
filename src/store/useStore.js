@@ -213,8 +213,7 @@ export const useStore = create((set, get) => ({
       })),
     }
     const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))))
-    const base = import.meta.env.VITE_APP_URL || window.location.origin
-    const url = `${base}/#share=${encoded}`
+    const url = `https://haul-rouge.vercel.app/#share=${encoded}`
     navigator.clipboard.writeText(url).catch(() => {})
     return url
   },
