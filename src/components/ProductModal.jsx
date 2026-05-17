@@ -74,7 +74,7 @@ export default function ProductModal() {
   }
 
   function save(overrideStatus) {
-    const product = { ...form, price: parseFloat(form.price) || 0 }
+    const product = { ...form, price: parseFloat(form.price) || 0, productUrl: urlInput.trim() || form.productUrl }
     if (overrideStatus) product.status = overrideStatus
     if (editingProduct?.id && !editingProduct.id.startsWith('product_dup')) {
       updateProduct(editingProduct.id, product)
