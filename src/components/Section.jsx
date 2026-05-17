@@ -9,18 +9,20 @@ import { formatCurrency } from '../utils/cost'
 import ProductCard from './ProductCard'
 
 export default function Section({ section }) {
-  const { getSectionProducts, getSectionMonthlyCost, getSectionWishlistCost, updateSection, deleteSection, toggleSection, openAddModal, getFilteredProducts, board, shareSection } = useStore()
+  const { getSectionProducts, getSectionMonthlyCost, getSectionWishlistCost, updateSection, deleteSection, toggleSection, openAddModal, getFilteredProducts, board, shareSection, sharingSection } = useStore()
   const [editing, setEditing] = useState(false)
   const [nameInput, setNameInput] = useState(section.name)
   const [budgetInput, setBudgetInput] = useState(section.monthlyBudgetCap || '')
   const [menuOpen, setMenuOpen] = useState(false)
   const [copied, setCopied] = useShareState(false)
 
-  function handleShare() {
-    shareSection(section.id)
-    setCopied(true)
+  const isSharing = sharingSection === section.id
+
+  async function handleShare() {
     setMenuOpen(false)
-    setTimeout(() => setCopied(false), 2000)
+    await shareSection(section.id)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2500)
   }
 
   const { attributes, listeners, setNodeRef: setSortableRef, transform, transition, isDragging } = useSortable({ id: section.id })
@@ -95,7 +97,12 @@ export default function Section({ section }) {
           <h3 className="flex-1 text-sm font-semibold" style={{ color: overBudget ? '#ef4444' : 'var(--c-text)' }}>
             {section.name}
           </h3>
-          {copied && (
+          {isSharing && (
+            <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ background: 'rgba(124,92,252,0.15)', color: '#a78bfa', border: '1px solid rgba(124,92,252,0.3)' }}>
+              Shortening…
+            </span>
+          )}
+          {!isSharing && copied && (
             <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ background: 'rgba(34,197,94,0.15)', color: '#22c55e', border: '1px solid rgba(34,197,94,0.3)' }}>
               <Check size={10} className="inline mr-1" />Link copied
             </span>
@@ -149,10 +156,10 @@ export default function Section({ section }) {
                       ? <><ChevronDown size={13} /> Expand</>
                       : <><ChevronRight size={13} /> Collapse</>}
                   </button>
-                  <button onClick={handleShare}
-                    className="w-full flex items-center gap-2 px-3 py-2 text-sm transition-colors" style={{ color: 'var(--c-text-3)' }}
-                    onMouseEnter={e => menuItemHover(e)} onMouseLeave={e => menuItemLeave(e, 'var(--c-text-3)')}>
-                    <Share2 size={13} /> Share section
+                  <button onClick={handleShare} disabled={isSharing}
+                    className="w-full flex items-center gap-2 px-3 py-2 text-sm transition-colors disabled:opacity-50" style={{ color: 'var(--c-text-3)' }}
+                    onMouseEnter={e => !isSharing && menuItemHover(e)} onMouseLeave={e => menuItemLeave(e, 'var(--c-text-3)')}>
+                    <Share2 size={13} /> {isSharing ? 'Shortening…' : 'Share section'}
                   </button>
                   <div style={{ borderTop: '1px solid var(--c-border)', margin: '4px 0' }} />
                   <button onClick={() => { deleteSection(section.id); setMenuOpen(false) }}

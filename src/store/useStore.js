@@ -63,6 +63,7 @@ export const useStore = create((set, get) => ({
   addModalOpen: false,
   editingProduct: null,
   addToSectionId: null,
+  sharingSection: null, // sectionId currently being shortened
 
   _save() {
     debouncedSave(get())
@@ -198,7 +199,7 @@ export const useStore = create((set, get) => ({
   },
 
   // Share
-  shareSection(sectionId) {
+  async shareSection(sectionId) {
     const section = get().sections.find(s => s.id === sectionId)
     if (!section) return
     const products = get().products.filter(p => p.sectionId === sectionId)
@@ -215,9 +216,21 @@ export const useStore = create((set, get) => ({
       })),
     }
     const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))))
-    const url = `https://haul-rouge.vercel.app/#share=${encoded}`
-    navigator.clipboard.writeText(url).catch(() => {})
-    return url
+    const longUrl = `https://haul-rouge.vercel.app/#share=${encoded}`
+
+    set({ sharingSection: sectionId })
+    try {
+      const res = await fetch(`https://is.gd/create.php?format=json&url=${encodeURIComponent(longUrl)}`)
+      const data = await res.json()
+      const shortUrl = data.shorturl || longUrl
+      navigator.clipboard.writeText(shortUrl).catch(() => {})
+      set({ sharingSection: null })
+      return shortUrl
+    } catch {
+      navigator.clipboard.writeText(longUrl).catch(() => {})
+      set({ sharingSection: null })
+      return longUrl
+    }
   },
 
   importSharedProducts(selectedProducts, targetSectionId, newSectionName) {
