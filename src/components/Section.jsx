@@ -2,17 +2,26 @@ import { useState } from 'react'
 import { useDroppable } from '@dnd-kit/core'
 import { SortableContext, rectSortingStrategy, useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { ChevronDown, ChevronRight, Plus, MoreVertical, Trash2, Edit2, GripVertical } from 'lucide-react'
+import { ChevronDown, ChevronRight, Plus, MoreVertical, Trash2, Edit2, GripVertical, Share2, Check } from 'lucide-react'
 import { useStore } from '../store/useStore'
+import { useState as useShareState } from 'react'
 import { formatCurrency } from '../utils/cost'
 import ProductCard from './ProductCard'
 
 export default function Section({ section }) {
-  const { getSectionProducts, getSectionMonthlyCost, getSectionWishlistCost, updateSection, deleteSection, toggleSection, openAddModal, getFilteredProducts, board } = useStore()
+  const { getSectionProducts, getSectionMonthlyCost, getSectionWishlistCost, updateSection, deleteSection, toggleSection, openAddModal, getFilteredProducts, board, shareSection } = useStore()
   const [editing, setEditing] = useState(false)
   const [nameInput, setNameInput] = useState(section.name)
   const [budgetInput, setBudgetInput] = useState(section.monthlyBudgetCap || '')
   const [menuOpen, setMenuOpen] = useState(false)
+  const [copied, setCopied] = useShareState(false)
+
+  function handleShare() {
+    shareSection(section.id)
+    setCopied(true)
+    setMenuOpen(false)
+    setTimeout(() => setCopied(false), 2000)
+  }
 
   const { attributes, listeners, setNodeRef: setSortableRef, transform, transition, isDragging } = useSortable({ id: section.id })
   const { setNodeRef: setDropRef } = useDroppable({ id: section.id })
@@ -86,6 +95,11 @@ export default function Section({ section }) {
           <h3 className="flex-1 text-sm font-semibold" style={{ color: overBudget ? '#ef4444' : 'var(--c-text)' }}>
             {section.name}
           </h3>
+          {copied && (
+            <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ background: 'rgba(34,197,94,0.15)', color: '#22c55e', border: '1px solid rgba(34,197,94,0.3)' }}>
+              <Check size={10} className="inline mr-1" />Link copied
+            </span>
+          )}
           <div className="flex items-center gap-1.5 flex-shrink-0">
             <span className="text-xs px-2 py-0.5 rounded-full font-medium"
               style={{ background: overBudget ? 'rgba(239,68,68,0.15)' : 'rgba(34,197,94,0.12)', color: overBudget ? '#ef4444' : '#22c55e', border: `1px solid ${overBudget ? 'rgba(239,68,68,0.3)' : 'rgba(34,197,94,0.25)'}` }}>
@@ -135,6 +149,15 @@ export default function Section({ section }) {
                     onMouseLeave={e => menuItemLeave(e, 'var(--c-text-3)')}
                   >
                     <Edit2 size={13} /> Rename
+                  </button>
+                  <button
+                    onClick={handleShare}
+                    className="w-full flex items-center gap-2 px-3 py-2 text-sm transition-colors"
+                    style={{ color: 'var(--c-text-3)' }}
+                    onMouseEnter={e => menuItemHover(e)}
+                    onMouseLeave={e => menuItemLeave(e, 'var(--c-text-3)')}
+                  >
+                    <Share2 size={13} /> Share section
                   </button>
                   {section.id !== 'section_unsorted' && (
                     <button

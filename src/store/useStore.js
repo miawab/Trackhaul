@@ -195,6 +195,56 @@ export const useStore = create((set, get) => ({
     get().updateProduct(productId, { sectionId: toSectionId })
   },
 
+  // Share
+  shareSection(sectionId) {
+    const section = get().sections.find(s => s.id === sectionId)
+    if (!section) return
+    const products = get().products.filter(p => p.sectionId === sectionId)
+    const payload = {
+      v: 1,
+      section: { name: section.name },
+      products: products.map(p => ({
+        name: p.name,
+        price: p.price,
+        imageUrl: p.imageUrl || '',
+        productUrl: p.productUrl || '',
+        frequency: p.frequency,
+        notes: p.notes || '',
+      })),
+    }
+    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))))
+    const url = `${window.location.origin}${window.location.pathname}#share=${encoded}`
+    navigator.clipboard.writeText(url).catch(() => {})
+    return url
+  },
+
+  importSharedProducts(selectedProducts, targetSectionId, newSectionName) {
+    let sectionId = targetSectionId
+    if (!sectionId) {
+      sectionId = `section_${Date.now()}`
+      const section = {
+        id: sectionId,
+        boardId: get().board.id,
+        name: newSectionName || 'Imported',
+        order: get().sections.length,
+        monthlyBudgetCap: '',
+        isCollapsed: false,
+      }
+      set(s => ({ sections: [...s.sections, section] }))
+    }
+    const now = new Date().toISOString()
+    const newProducts = selectedProducts.map(p => ({
+      ...p,
+      id: `product_${Date.now()}_${Math.random().toString(36).slice(2)}`,
+      sectionId,
+      status: 'active',
+      createdAt: now,
+      updatedAt: now,
+    }))
+    set(s => ({ products: [...s.products, ...newProducts] }))
+    get()._save()
+  },
+
   // UI
   setSearchQuery(q) { set({ searchQuery: q }) },
   setFilterStatus(v) { set({ filterStatus: v }) },
