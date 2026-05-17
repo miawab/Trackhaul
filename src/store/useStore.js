@@ -212,6 +212,7 @@ export const useStore = create((set, get) => ({
         imageUrl: p.imageUrl || '',
         productUrl: p.productUrl || '',
         frequency: p.frequency,
+        status: p.status || 'active',
         notes: p.notes || '',
       })),
     }
@@ -252,7 +253,7 @@ export const useStore = create((set, get) => ({
       ...p,
       id: `product_${Date.now()}_${Math.random().toString(36).slice(2)}`,
       sectionId,
-      status: 'active',
+      status: p.status || 'active',
       createdAt: now,
       updatedAt: now,
     }))

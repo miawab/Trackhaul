@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { X, Package, Plus, Check } from 'lucide-react'
+import { X, Package, Plus, Check, Star } from 'lucide-react'
 import { useStore } from '../store/useStore'
 import { getMonthlyCost, getFrequencyLabel, formatCurrency } from '../utils/cost'
 
@@ -94,11 +94,17 @@ export default function ShareImportModal({ payload, onClose }) {
 
                 {/* Info */}
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate" style={{ color: 'var(--c-text)' }}>{p.name}</p>
+                  <div className="flex items-center gap-1.5">
+                    <p className="text-sm font-medium truncate" style={{ color: 'var(--c-text)' }}>{p.name}</p>
+                    {p.status === 'paused' && (
+                      <Star size={11} style={{ color: '#a78bfa', fill: '#a78bfa', flexShrink: 0 }} title="Wishlist item" />
+                    )}
+                  </div>
                   <p className="text-xs" style={{ color: 'var(--c-text-5)' }}>
                     {formatCurrency(p.price, board.currency)}
                     {!isOneTime && mc > 0 && <span style={{ color: 'var(--c-text-6)' }}> · ≈{formatCurrency(mc, board.currency)}/mo</span>}
                     {getFrequencyLabel(p.frequency) && <span> · {getFrequencyLabel(p.frequency)}</span>}
+                    {p.status === 'paused' && <span style={{ color: '#a78bfa' }}> · wishlist</span>}
                   </p>
                 </div>
               </div>
