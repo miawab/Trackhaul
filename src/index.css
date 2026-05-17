@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+:root {
+  font-family: Inter, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+
+  /* Dark theme (default) */
+  --c-bg:            #0f0f13;
+  --c-surface:       #1a1a24;
+  --c-surface-alt:   #13131c;
+  --c-input:         #12121a;
+  --c-popup:         #1e1e2e;
+  --c-border:        #2a2a3a;
+  --c-border-input:  #2e2e42;
+  --c-border-hover:  #3a3a55;
+  --c-border-strong: #555555;
+  --c-text:          #e8e8f0;
+  --c-text-2:        #cccccc;
+  --c-text-3:        #aaaaaa;
+  --c-text-4:        #888888;
+  --c-text-5:        #666666;
+  --c-text-6:        #555555;
+  --c-text-7:        #444444;
+  --c-text-8:        #333333;
+  --c-placeholder:   #555555;
+  --c-accent:        #7c5cfc;
+  --c-accent-hover:  #6b4de8;
+}
+
+.light {
+  --c-bg:            #f5f5fb;
+  --c-surface:       #ffffff;
+  --c-surface-alt:   #f9f9fd;
+  --c-input:         #f2f2f8;
+  --c-popup:         #ffffff;
+  --c-border:        #e2e2f0;
+  --c-border-input:  #d8d8ec;
+  --c-border-hover:  #c5c5e0;
+  --c-border-strong: #a0a0c0;
+  --c-text:          #1a1a2e;
+  --c-text-2:        #2e2e48;
+  --c-text-3:        #4a4a6a;
+  --c-text-4:        #6b6b8a;
+  --c-text-5:        #8080a0;
+  --c-text-6:        #9090b0;
+  --c-text-7:        #a0a0c0;
+  --c-text-8:        #b0b0cc;
+  --c-placeholder:   #9090b0;
+  --c-accent:        #7c5cfc;
+  --c-accent-hover:  #6b4de8;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--c-bg);
+  color: var(--c-text);
+  min-height: 100vh;
+  transition: background 0.2s, color 0.2s;
+}
+
+#root { width: 100%; }
+
+/* native select/option theming */
+select option {
+  background: var(--c-popup);
+  color: var(--c-text);
+}
